@@ -2,7 +2,7 @@ require 'rubygems'
 require 'ruby-progressbar'
 require 'Nokogiri'
 require 'csv'
-# require 'pry'
+require 'pry'
 
 ENGAGEMENT_THRESHOLD = 5
 
@@ -33,7 +33,7 @@ unless File.exist?('quora-data.csv')
 end
 
 questions.each do |q|
-  link = q.css('a.question_link').attr('href').value
+  link = "https://www.quora.com" + q.css('a.question_link').attr('href').value
   title = q.css('a.question_link').text.strip
   answer_count = q.css('.QuestionFooter .answer_count_prominent').text.strip.to_i
   follower_count = q.css('.FollowActionItem .icon_action_bar-label span > span:last-child').text.to_i
@@ -49,11 +49,21 @@ questions.each do |q|
   raw_time = q.css('.QuestionFooter .question_timestamp').text.strip
   last_action = raw_time.include?("Last requested") ? "Requested" : "Followed"
 
-  if raw_time.count("0-9") > 0
-    parsed_time = Date.parse(raw_time).strftime("%Y-%m-%d")
+  if raw_time.include?('ago')
+    if raw_time.scan(/(\d*)h/).flatten.any?
+      hours_ago = raw_time.scan(/(\d*)h/).flatten[0].to_f
+      parsed_time = (DateTime.now - (hours_ago / 24)).strftime('%Y-%m-%d')
+    elsif raw_time.scan(/(\d*)m/).flatten.any?
+      minutes_ago = raw_time.scan(/(\d*)m/).flatten[0].to_f
+      parsed_time = (DateTime.now - (1.0 / 24 / 60)).strftime('%Y-%m-%d')
+    end
   else
-    parsed_time =
-      (Date.today < Date.parse(raw_time)) ? (Date.parse(raw_time) - 7) : Date.parse(raw_time)
+    if raw_time.count("0-9") > 0
+      parsed_time = Date.parse(raw_time).strftime("%Y-%m-%d")
+    else
+      parsed_time =
+        (Date.today < Date.parse(raw_time)) ? (Date.parse(raw_time) - 7) : Date.parse(raw_time)
+    end
   end
 
   CSV.open("quora-data.csv", "a+") do |csv|
