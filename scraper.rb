@@ -4,7 +4,7 @@ require 'Nokogiri'
 require 'csv'
 require 'pry'
 
-ENGAGEMENT_THRESHOLD = 5
+ENGAGEMENT_THRESHOLD = 4
 
 # init progressbar
 progressbar = ProgressBar.create( format:         '%a %bᗧ%i %p%% %t',
@@ -36,7 +36,7 @@ questions.each do |q|
   link = "https://www.quora.com" + q.css('a.question_link').attr('href').value
   title = q.css('a.question_link').text.strip
   answer_count = q.css('.QuestionFooter .answer_count_prominent').text.strip.to_i
-  follower_count = q.css('.FollowActionItem .icon_action_bar-label span > span:last-child').text.to_i
+  follower_count = q.css('.FollowActionItem .ui_button_count .ui_button_count_inner').text.to_i
   ratio = "#{follower_count}/#{answer_count}"
 
   if answer_count == 0
