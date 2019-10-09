@@ -1,5 +1,7 @@
 # Quora Questions Scraper
 
+🔥 I'm launching a Quora Marketing Tool soon, if you'd like to be notified [let me know here](https://forms.gle/6xDTyjCM6mj8TbPK7) (No Spam, pinky-promise) 🔥
+
 > USE AT YOUR OWN DISCRETION. THIS PROJECT IS INTENDED FOR.. EDUCATIONAL PURPOSES ONLY. COUGH. SCRAPE RESPONSIBLY
 
 ### What is Quora?
